@@ -7,7 +7,6 @@
 sudo mkdir /var/log/horizon
 sudo chown 33 /var/log/horizon
 # Must be sed-comptaible regex escaped, use the single quotes!
-KEYSTONE_URL=
 KEYSTONE_URL='http:\/\/10\.10\.10\.1:5000\/v2\.0'
 sudo docker run -d -p 80:80 -v /var/log/horizon:/var/log/apache2:rw \
   -e KEYSTONE_URL=$KEYSTONE_URL alvaroaleman/openstack-horizon
@@ -15,7 +14,7 @@ sudo docker run -d -p 80:80 -v /var/log/horizon:/var/log/apache2:rw \
 
 ## Description
 
-A simple Openstack Horizon image. Debug is set to true. For any advanced configuration,
+A simple Openstack Horizon image. For any advanced configuration,
 it is adviced to build your own image based on this using your own configuration:
 
 ```shell
