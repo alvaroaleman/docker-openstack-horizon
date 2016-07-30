@@ -1,6 +1,6 @@
 FROM debian:jessie
 ENV HORIZON_BASEDIR /opt/horizon
-ENV KEYSTONE_URL http://127.0.0.1:5000/v2
+ENV KEYSTONE_URL 'http:\/\/127\.0.0\.1:5000\/v2'
 EXPOSE 80
 
 RUN \
@@ -13,6 +13,7 @@ RUN \
 COPY start.sh /usr/local/bin/start.sh
 
 RUN \
+    set -x && \
     cd ${HORIZON_BASEDIR} && \
     pip install . && \
     cp openstack_dashboard/local/local_settings.py.example openstack_dashboard/local/local_settings.py && \
@@ -23,7 +24,9 @@ RUN \
     ./manage.py make_web_conf --apache > /etc/apache2/sites-enabled/horizon.conf && \
     sed -i 's/<VirtualHost \*.*/<VirtualHost _default_:80>/g' /etc/apache2/sites-enabled/horizon.conf && \
     chown -R www-data:www-data ${HORIZON_BASEDIR} && \
-    chmod +x /usr/local/bin/start.sh
+    chmod +x /usr/local/bin/start.sh && \
+    sed -i 's/^DEBUG.*/DEBUG = False/g' $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
+    printf  "\nALLOWED_HOSTS = ['*', ]\n" >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py
 
 VOLUME /var/log/apache2
 
