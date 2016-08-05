@@ -1,19 +1,25 @@
 FROM debian:jessie
-ENV HORIZON_BASEDIR /opt/horizon
-ENV KEYSTONE_URL 'http:\/\/127\.0.0\.1:5000\/v2'
+
+ENV HORIZON_BASEDIR=/opt/horizon \
+    KEYSTONE_URL='http:\/\/127\.0.0\.1:5000\/v2' \
+    APACHE_RUN_USER=www-data \
+    APACHE_RUN_GROUP=www-data \
+    APACHE_PID_FILE=/var/run/apache2/apache2.pid \
+    APACHE_RUN_DIR=/var/run/apache2 \
+    APACHE_LOCK_DIR=/var/lock/apache2 \
+    APACHE_LOG_DIR=/var/log/apache2 \
+    LANG=C
+
 EXPOSE 80
+
+COPY start.sh /usr/local/bin/start.sh
 
 RUN \
   apt update && \
   apt install -y \
     apache2 libapache2-mod-wsgi \
     python-pip python-dev git && \
-    git clone https://github.com/openstack/horizon.git ${HORIZON_BASEDIR}
-
-COPY start.sh /usr/local/bin/start.sh
-
-RUN \
-    set -x && \
+    git clone https://github.com/openstack/horizon.git ${HORIZON_BASEDIR} && \
     cd ${HORIZON_BASEDIR} && \
     pip install . && \
     cp openstack_dashboard/local/local_settings.py.example openstack_dashboard/local/local_settings.py && \
