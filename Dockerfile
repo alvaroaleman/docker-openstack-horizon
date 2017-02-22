@@ -9,7 +9,7 @@ ENV HORIZON_BASEDIR=/opt/horizon \
     APACHE_LOCK_DIR=/var/lock/apache2 \
     APACHE_LOG_DIR=/var/log/apache2 \
     LANG=C \
-    VERSION=11.0.0.0rc1
+    VERSION=11.0.0.0
 
 EXPOSE 80
 
