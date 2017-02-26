@@ -11,7 +11,7 @@ ENV HORIZON_BASEDIR=/opt/horizon \
     LANG=C \
     VERSION=11.0.0.0
 
-EXPOSE 80
+EXPOSE 8080
 
 RUN \
   apt update && \
@@ -28,6 +28,8 @@ RUN \
     rm -rf /etc/apache2/sites-enabled/* && \
     ./manage.py make_web_conf --apache > /etc/apache2/sites-enabled/horizon.conf && \
     sed -i 's/<VirtualHost \*.*/<VirtualHost _default_:80>/g' /etc/apache2/sites-enabled/horizon.conf && \
+    sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf && \
+    sed -i 's/:80>/:8080>' /etc/apache2/sites-enabled/horizon.conf && \
     chown -R www-data:www-data ${HORIZON_BASEDIR} && \
     sed -i 's/^DEBUG.*/DEBUG = False/g' $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
     sed -i 's/^OPENSTACK_KEYSTONE_URL.*/OPENSTACK_KEYSTONE_URL = os\.environ\["KEYSTONE_URL"\]/g' \
@@ -36,5 +38,7 @@ RUN \
     python -m compileall $HORIZON_BASEDIR
 
 VOLUME /var/log/apache2
+
+USER www-data
 
 CMD /usr/sbin/apache2 -DFOREGROUND
