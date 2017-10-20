@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 
 ENV HORIZON_BASEDIR=/opt/horizon \
     KEYSTONE_URL='http://keystone:5000/v2' \
@@ -9,7 +9,7 @@ ENV HORIZON_BASEDIR=/opt/horizon \
     APACHE_LOCK_DIR=/var/lock/apache2 \
     APACHE_LOG_DIR=/var/log/apache2 \
     LANG=C \
-    VERSION=11.0.0
+    VERSION=12.0.0
 
 EXPOSE 80
 
