@@ -33,7 +33,10 @@ RUN \
     sed -i 's/^OPENSTACK_KEYSTONE_URL.*/OPENSTACK_KEYSTONE_URL = os\.environ\["KEYSTONE_URL"\]/g' \
       $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
     printf  "\nALLOWED_HOSTS = ['*', ]\n" >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
-    python -m compileall $HORIZON_BASEDIR
+    python -m compileall $HORIZON_BASEDIR && \
+    sed -i '/ErrorLog/c\    ErrorLog \/dev\/stderr' /etc/apache2/sites-enabled/horizon.conf && \
+    sed -i '/CustomLog/c\    CustomLog \/dev\/stdout combined' /etc/apache2/sites-enabled/horizon.conf && \
+    sed -i '/ErrorLog/c\    ErrorLog \/dev\/stderr' /etc/apache2/apache2.conf
 
 VOLUME /var/log/apache2
 
