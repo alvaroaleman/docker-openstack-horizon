@@ -18,26 +18,27 @@ RUN \
   apt install -y \
     apache2 libapache2-mod-wsgi \
     python-pip python-dev git && \
-    git clone --branch $VERSION --depth 1 https://github.com/openstack/horizon.git ${HORIZON_BASEDIR} && \
-    cd ${HORIZON_BASEDIR} && \
-    pip install . && \
-    cp openstack_dashboard/local/local_settings.py.example openstack_dashboard/local/local_settings.py && \
-    ./manage.py collectstatic --noinput && \
-    ./manage.py compress --force && \
-    ./manage.py make_web_conf --wsgi && \
-    rm -rf /etc/apache2/sites-enabled/* && \
-    ./manage.py make_web_conf --apache > /etc/apache2/sites-enabled/horizon.conf && \
-    sed -i 's/<VirtualHost \*.*/<VirtualHost _default_:80>/g' /etc/apache2/sites-enabled/horizon.conf && \
-    chown -R www-data:www-data ${HORIZON_BASEDIR} && \
-    sed -i 's/^DEBUG.*/DEBUG = False/g' $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
-    sed -i 's/^OPENSTACK_KEYSTONE_URL.*/OPENSTACK_KEYSTONE_URL = os\.environ\["KEYSTONE_URL"\]/g' \
-      $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
-    printf  "\nALLOWED_HOSTS = ['*', ]\n" >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
-    python -m compileall $HORIZON_BASEDIR && \
-    sed -i '/ErrorLog/c\    ErrorLog \/dev\/stderr' /etc/apache2/sites-enabled/horizon.conf && \
-    sed -i '/CustomLog/c\    CustomLog \/dev\/stdout combined' /etc/apache2/sites-enabled/horizon.conf && \
-    sed -i '/ErrorLog/c\    ErrorLog \/dev\/stderr' /etc/apache2/apache2.conf
-
-VOLUME /var/log/apache2
+  git clone --branch $VERSION --depth 1 https://github.com/openstack/horizon.git ${HORIZON_BASEDIR} && \
+  cd ${HORIZON_BASEDIR} && \
+  pip install . && \
+  cp openstack_dashboard/local/local_settings.py.example openstack_dashboard/local/local_settings.py && \
+  sed -i 's/^DEBUG.*/DEBUG = False/g' $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
+  echo 'COMPRESS_OFFLINE = True' >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
+  sed -i 's/^OPENSTACK_KEYSTONE_URL.*/OPENSTACK_KEYSTONE_URL = os\.environ\["KEYSTONE_URL"\]/g' \
+    $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
+  printf  "\nALLOWED_HOSTS = ['*', ]\n" >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
+  ./manage.py collectstatic --noinput && \
+  ./manage.py compress --force && \
+  ./manage.py make_web_conf --wsgi && \
+  rm -rf /etc/apache2/sites-enabled/* && \
+  ./manage.py make_web_conf --apache > /etc/apache2/sites-enabled/horizon.conf && \
+  sed -i 's/<VirtualHost \*.*/<VirtualHost _default_:80>/g' /etc/apache2/sites-enabled/horizon.conf && \
+  chown -R www-data:www-data ${HORIZON_BASEDIR} && \
+  python -m compileall $HORIZON_BASEDIR && \
+  sed -i '/ErrorLog/c\    ErrorLog \/dev\/stderr' /etc/apache2/sites-enabled/horizon.conf && \
+  sed -i '/CustomLog/c\    CustomLog \/dev\/stdout combined' /etc/apache2/sites-enabled/horizon.conf && \
+  sed -i '/ErrorLog/c\    ErrorLog \/dev\/stderr' /etc/apache2/apache2.conf && \
+  apt remove -y python-dev git && \
+  apt autoremove -y
 
 CMD /usr/sbin/apache2 -DFOREGROUND
