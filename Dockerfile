@@ -21,6 +21,7 @@ RUN \
   git clone --branch $VERSION --depth 1 https://github.com/openstack/horizon.git ${HORIZON_BASEDIR} && \
   cd ${HORIZON_BASEDIR} && \
   pip install . && \
+  pip install python-memcached && \
   cp openstack_dashboard/local/local_settings.py.example openstack_dashboard/local/local_settings.py && \
   sed -i 's/^DEBUG.*/DEBUG = False/g' $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
   echo 'COMPRESS_OFFLINE = True' >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
