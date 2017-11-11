@@ -19,6 +19,11 @@ A simple Openstack Horizon image, currently based on v10.0.0 (Newton).
 For any advanced configuration, it is advised to build your own image
 based on this using your own configuration:
 
+## Environment variables
+
+* `KEYSTONE_URL`: Url of the keystone endpoint
+* `IDENTITY_API_VERSION`: Version of the identity api you want to use (default: `2.0`)
+
 ```shell
 FROM alvaroaleman/openstack-horizon
 
