@@ -9,13 +9,13 @@ sudo chown 33 /var/log/horizon
 sudo docker run -d \
   -p 80:80 \
   -v /var/log/horizon:/var/log/apache2:rw \
-  -e KEYSTONE_URL='http://10.10.10.1:5000/v2.0' \
+  -e KEYSTONE_URL='http://10.10.10.1:5000/v3' \
   alvaroaleman/openstack-horizon
 ```
 
 ## Description
 
-A simple Openstack Horizon image, currently based on v10.0.0 (Newton).
+A simple Openstack Horizon image, currently based on v13.0.0 (Queens).
 For any advanced configuration, it is advised to build your own image
 based on this using your own configuration:
 
