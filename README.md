@@ -22,7 +22,7 @@ based on this using your own configuration:
 ## Environment variables
 
 * `KEYSTONE_URL`: Url of the keystone endpoint
-* `IDENTITY_API_VERSION`: Version of the identity api you want to use (default: `2.0`)
+* `IDENTITY_API_VERSION`: Version of the identity api you want to use (default: `3`)
 
 ```shell
 FROM alvaroaleman/openstack-horizon

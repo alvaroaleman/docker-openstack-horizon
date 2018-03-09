@@ -28,7 +28,7 @@ RUN \
   sed -i 's/^OPENSTACK_KEYSTONE_URL.*/OPENSTACK_KEYSTONE_URL = os\.environ\["KEYSTONE_URL"\]/g' \
     $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
   printf  "\nALLOWED_HOSTS = ['*', ]\n" >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
-  echo 'OPENSTACK_API_VERSIONS = {"identity": os.environ.get("IDENTITY_API_VERSION", "2.0") }' \
+  echo 'OPENSTACK_API_VERSIONS = {"identity": os.environ.get("IDENTITY_API_VERSION", 3) }' \
     >> $HORIZON_BASEDIR/openstack_dashboard/local/local_settings.py && \
   ./manage.py collectstatic --noinput && \
   ./manage.py compress --force && \
